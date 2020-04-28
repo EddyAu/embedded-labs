@@ -9,6 +9,10 @@
 
 #include "stm32f439xx.h"
 
+#define RCC_AHB2ENR_GPIOBEN ((uint32_t)0x0000002u)
+#define RCC_AHB2ENR_GPIOFEN ((uint32_t)0x0000002u)
+
+
 
 int Sum( int a, int b) { 
 	int c;
@@ -24,36 +28,33 @@ void myDelay(long delay) {
 	}
 }
 
-/**
-	System Initialisation Function
-*/
-void SystemInit(void) {
-	
-	
-}
 
-/*
-GPIOx_ODR - output data register
-GPIOx_IDR - input data register
-
-// TASKS (MAIN):
-	* PORTs configuration
-	* Read data from input pins
-	* Write data to output pins
-
-// TASKS (SIMULATOR):
-	* Use fakeIDR as input data
-	* Use variables to store output values
-
-// Summary:
-	* Use Button A (PB0) and Button B (PB1) to control two LEDs
-		LED 6 (PB8) and LED 7 (PF8)
-*/
 int main (void) {	
+		
+	int inputVal = 2;
+	int fakeIDR, fakeODR;
 	
-	int dataRead, dataOutput;  // Used for storing and sending data
 	
-	int inputVal = 0;
+	
+	
+	// Setup PORTB
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN; // enable the clock
+	GPIOB->MODER &= ~(3UL<<4);		//  clear mode bits
+	GPIOB->MODER |= 1UL<<4;				// set mode to output
+	GPIOB->OTYPER &= ~(1UL<<2);		// select push-pull output
+	
+	// Setup PORTF
+	RCC->AHB2ENR |= RCC_AHB1ENR_GPIOFEN;
+	GPIOF->MODER &= ~(3UL<<4);		// clear the mode bits
+	GPIOF->MODER |= 1UL<<4;				// set the mode to output
+	GPIOF->OTYPER &= ~(1UL<<2);		// select push-pull output
+	
+	// led6 = pb8
+	// led7 = pf8
+	
+	
+	
+	// Loop indefinitely
 	/*
 	Case 1: Button A and B is pressed
 		0b00 = 0
@@ -72,33 +73,34 @@ int main (void) {
 		LED 6 = OFF, LED 7 = on/off blinking (1s)
 	
 	*/
-	
-	
-	//SystemInit();  // Call SystemInit here (comment out for simulator)
-	
-	RCC->AHB1ENR |= 1<<7;
-	GPIOB->IDR = dataRead;
-	GPIOB->ODR = dataOutput;
-	
-	// Loop indefinitely
 	while (1) {
+		// 0 = case1, 1 = case2, 2 = case3, 3 = case4
 		switch (inputVal) {
 			case 0:
-				// both leds off
+				fakeIDR = GPIOB->IDR;
+
+				
 				break;
 			
 			case 1:
 				// led7 on
+			  GPIOF->ODR |= 1UL << 8;				// output to turn on LED7 (PF8)
+				fakeIDR = GPIOF->IDR;
 				break;
 			
 			case 2:
 				// led 6 on
+			  GPIOB->ODR |= 1UL << 8;				// output to turn on LED6 (PB8)
+				fakeIDR = GPIOB->IDR;
 				break;
 			
 			case 3:
 				// led 6 off, led 7 blinking
+				GPIOF->ODR |= 1UL << 8;
+				fakeIDR = GPIOF->IDR;
+				//myDelay(1000); // delay
 				break;
+		}
+	
 	}
-	
-	
 }
