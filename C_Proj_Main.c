@@ -28,27 +28,38 @@ void myDelay(long delay) {
 	System Initialisation Function
 */
 void SystemInit(void) {
-	RCC->AHB1ENR |= 1<<7; // enable the AHB clock for port h
+	
 	
 }
 
+/*
+GPIOx_ODR - output data register
+GPIOx_IDR - input data register
 
+// TASKS (MAIN):
+	* PORTs configuration
+	* Read data from input pins
+	* Write data to output pins
+
+// TASKS (SIMULATOR):
+	* Use fakeIDR as input data
+	* Use variables to store output values
+
+// Summary:
+	* Use Button A (PB0) and Button B (PB1) to control two LEDs
+		LED 6 (PB8) and LED 7 (PF8)
+*/
 int main (void) {	
 	
-	int x,y,z, s;
+	int dataRead, dataOutput;  
+	int buttonA, buttonB; 		// Buttons
+	int led6, led7;						// LEDs
 	
-	SystemInit();  // Call SystemInit here
+	//SystemInit();  // Call SystemInit here (comment out for simulator)
+	RCC->AHB1ENR |= 1<<7;
+	GPIOB->IDR = dataRead;
+	GPIOB->ODR = dataOutput;
 	
-	// test some simple C statements
-	x=2;
-	y=5;
-	z=x*y;
-	
-	s= Sum(x, y) ; // test a function call
-	
-	// test an access to GPIOD registers 
-	RCC->AHB1ENR |= 0x000001F8;
-	GPIOD->ODR = z;
 	
 	
 	// infinite loop
