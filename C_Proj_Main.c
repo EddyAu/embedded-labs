@@ -51,14 +51,41 @@ GPIOx_IDR - input data register
 */
 int main (void) {	
 	
-	int dataRead, dataOutput;  
-	int buttonA, buttonB; 		// Buttons
-	int led6, led7;						// LEDs
+	int dataRead, dataOutput;  // Used for storing and sending data
+	
+	int buttonA;		// Button A, by default set to "0"
+	int buttonB; 		// Button B, by default set to "0"
+	int led6;				// LED6 = PB8
+	int led7;				// LED7 = PF8
+	
 	
 	//SystemInit();  // Call SystemInit here (comment out for simulator)
+	
 	RCC->AHB1ENR |= 1<<7;
 	GPIOB->IDR = dataRead;
 	GPIOB->ODR = dataOutput;
+	
+	// CASE 1: No button is pressed
+	if ((buttonA == 0) && (buttonB == 0)){
+		// LED6 = OFF
+		// LED7 = blinks 1s interval
+	}
+	
+	// CASE 2: Button A is pressed
+	else if ((buttonA == 1)&& (buttonB == 0)){
+		// Turn LED7 on, LED6 stays off
+	}
+	
+	// CASE 3: Button B is pressed
+	else if ((buttonA == 0)&& (buttonB == 1)) {
+		// Turn LED6 on, LED7 stays off
+	}
+	
+	// CASE 4: Both buttons are pressed
+	else {
+		// All LEDs are off
+	}
+	
 	
 	
 	
