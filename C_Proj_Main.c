@@ -59,6 +59,9 @@ int main (void) {
 			case 0:
 				GPIOB->ODR &=(0x00000000); // turn off portb
 				GPIOF->ODR &=(0x00000000); // turn off portf
+			
+				fakeIDR = (GPIOB->IDR) & (GPIOF->IDR);
+
 				break;
 			
 			/************************
@@ -103,8 +106,8 @@ int main (void) {
 				fakeIDR = (GPIOB->IDR) & (GPIOF->IDR);
 				break;
 		}
-		
 		counter++; // increment counter to next state
+		if (counter == 4) { counter = 0; } // check if it overruns
 		fakeIDR=0; // reset fakeIDR value
 	}
 }
