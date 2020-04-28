@@ -53,10 +53,25 @@ int main (void) {
 	
 	int dataRead, dataOutput;  // Used for storing and sending data
 	
-	int buttonA;		// Button A, by default set to "0"
-	int buttonB; 		// Button B, by default set to "0"
-	int led6;				// LED6 = PB8
-	int led7;				// LED7 = PF8
+	int inputVal = 0;
+	/*
+	Case 1: Button A and B is pressed
+		0b00 = 0
+		Both LEDs are off
+	
+	Case 2: Button A is pressed
+		0b01 = 1
+		LED6 = OFF, LED7 = ON
+	
+	CASE 3: Button B is pressed
+		0b10 = 2
+		LED6 = ON, LED7 = OFF
+	
+	CASE 4: No button is pressed
+		0b11 = 3
+		LED 6 = OFF, LED 7 = on/off blinking (1s)
+	
+	*/
 	
 	
 	//SystemInit();  // Call SystemInit here (comment out for simulator)
@@ -65,31 +80,25 @@ int main (void) {
 	GPIOB->IDR = dataRead;
 	GPIOB->ODR = dataOutput;
 	
-	// CASE 1: No button is pressed
-	if ((buttonA == 0) && (buttonB == 0)){
-		// LED6 = OFF
-		// LED7 = blinks 1s interval
+	// Loop indefinitely
+	while (1) {
+		switch (inputVal) {
+			case 0:
+				// both leds off
+				break;
+			
+			case 1:
+				// led7 on
+				break;
+			
+			case 2:
+				// led 6 on
+				break;
+			
+			case 3:
+				// led 6 off, led 7 blinking
+				break;
 	}
 	
-	// CASE 2: Button A is pressed
-	else if ((buttonA == 1)&& (buttonB == 0)){
-		// Turn LED7 on, LED6 stays off
-	}
 	
-	// CASE 3: Button B is pressed
-	else if ((buttonA == 0)&& (buttonB == 1)) {
-		// Turn LED6 on, LED7 stays off
-	}
-	
-	// CASE 4: Both buttons are pressed
-	else {
-		// All LEDs are off
-	}
-	
-	
-	
-	
-	// infinite loop
-	for(; ;)
-	{;} /* dead loop*/
 }
