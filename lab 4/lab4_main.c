@@ -15,7 +15,7 @@
 /****************************
 General variables
 ****************************/
-int current, humidity;
+int current_humidity;
 int light;
 bool lightStatus; // might use these to show that the fan is working or not
 bool fanStatus;		// same for fan
@@ -36,7 +36,22 @@ char tx_array[3];				// for transmission
 int tx_index = 0;				
 bool tx_finished = false;
 
-// ADC interrupt routine
+/****************************
+ADC IRQ Handler
+****************************/
+void ADC_IRQHandler() {
+	
+	if (ADC1->SR & (1<<1)) {
+		// If EoC, then read the ADV value
+		current_humidity = ADC1->DR;	// Read the ADC
+		ADC1->SR &=(1<<1); 						// Apparently not necessary
+		
+	}
+	// check if the interrupt is triggered by ADC watch dog
+	// ... see tutorial 7, page 8,9
+	
+}
+
 
 // SysTick interrupt routines
 
