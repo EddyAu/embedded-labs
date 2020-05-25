@@ -130,6 +130,30 @@ int main (void) {
 		
 	// System configuration - this should include the ADC, serial port and SysTick
 	
+	RCC->AHB1ENR |= (1<<5) | (1<<2) | (1<<1) | (1<<0); //enable clock for portf, portc, portb and porta
+	RCC_APB2ENR |= (1 << 5); // Enable Usart6 clock
+	
+	GPIOB->MODER = (1<<8); // PB8 for portb set output 01  
+	GPIOF->MODER = (1<<8); // PB8 for portf set output 01
+	
+	
+	
+	GPIOB->OTYPER = (GPIOB->OTYPER & GPIO_OTYPER_OT8);
+	GPIOF->OTYPER = (GPIOF->OTYPER & GPIO_OTYPER_OT8);
+	
+	GPIOB->OSPEEDR = (GPIO_OSPEEDR_OSPEED0_0) | (GPIO_OSPEEDR_OSPEED1_0) | (GPIO_OSPEEDR_OSPEED8_0) ;
+	
+	GPIOF->OSPEEDR = (GPIO_OSPEEDR_OSPEED8_0);
+	//GPIOB->OSPEEDR=0x10005;
+	//GPIOF->OSPEEDR=0x10000;
+	
+	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPD0_0|GPIO_PUPDR_PUPD0_1); // set to 00: No pull-up, pull-down
+	//GPIOB->PUPDR=0x00;
+	GPIOF->PUPDR &= ~(GPIO_PUPDR_PUPD0_0|GPIO_PUPDR_PUPD0_1); // set to 00: No pull-up, pull-down
+	//GPIOF->PUPDR=0x00;
+	
+	
+	
 	while(1){
 		
 		/*
