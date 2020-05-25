@@ -130,13 +130,17 @@ int main (void) {
 		
 	// System configuration - this should include the ADC, serial port and SysTick
 	
-	RCC->AHB1ENR |= (1<<5) | (1<<2) | (1<<1) | (1<<0); //enable clock for portf, portc, portb and porta
-	RCC_APB2ENR |= (1 << 5); // Enable Usart6 clock
+	RCC->AHB1ENR |= (1<<5) | (1<<2) | (1<<1) | 1; //enable clock for portf, portc, portb and porta
+	RCC->APB2ENR |= (1 << 5); // Enable Usart6 clock
 	
-	GPIOB->MODER = (1<<8); // PB8 for portb set output 01  
+	GPIOA->MODER |=0x3; // 11 : for Analog mode for pin 0 of Port A
+	GPIOB->MODER = (1<<8); // PB8 for portb set output 01 
+	GPIOC->MODER  &= ~ ((0x3<<12) | (0x3<<14)); //  clear PC6, PC7 mode
+	GPIOC->MODER  |= (0x2<<12) | (0x2<<14); //PC6, PC7 in AF mode
 	GPIOF->MODER = (1<<8); // PB8 for portf set output 01
 	
-	
+	GPIOC->AFR[0] &= ~( (0xF<<28) | (0xF<<24)); // Clear bits 31~28, 27~24
+	GPIOC->AFR[0]  |= ( 0x8 <<28) | (0x8 <<24); // set PC6, PC7 as AF8
 	
 	GPIOB->OTYPER = (GPIOB->OTYPER & GPIO_OTYPER_OT8);
 	GPIOF->OTYPER = (GPIOF->OTYPER & GPIO_OTYPER_OT8);
